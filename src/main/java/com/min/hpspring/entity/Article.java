@@ -31,6 +31,8 @@ public class Article {
         this.content = content;
     }
 
+
+
     @Override
     public String toString() { //우클Gen-toString해서 만들어진거
         return "Article{" +
@@ -40,7 +42,21 @@ public class Article {
                 '}';
     }
 
-    public Article() {
 
+
+
+    //?????기본생성자가 없으면 어째 오류가남.아래것들 깡그리 없애면? 그럼오류남
+    public Article() {
     }
+
+    //이거 왜필요함? 하는게없음.
+//    public Article toEntity() {
+//        return new Article();
+//    }
+//
+
+
+
+
+
 }
