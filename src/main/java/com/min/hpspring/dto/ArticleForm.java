@@ -1,26 +1,35 @@
 package com.min.hpspring.dto;
 
 import com.min.hpspring.entity.Article;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 
+@AllArgsConstructor //롬복 - 자동생성자
+@ToString //롬복 - toString()
 public class ArticleForm {
 
     private String title;
     private String content;
 
 
-    //우클릭 Generate - Constructor(생성자) - 두개선택 해서 자동생성된 메소드
-    public ArticleForm(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }   //여기까지는 기본적으로 프론트단 form데이터 받아오려면 갖추어야할 형태이다.
 
-    @Override   //우클릭 Generate - toString() - 두개선택 해서 자동생성된 메소드. 역할: 로그보려는건가?
-    public String toString() {
-        return "ArticleForm{" +
-                "title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                '}';
-    }
+
+//    @AllArgsConstructor를 달았으므로 필요가없다. 롬복의 힘이다.
+//    public ArticleForm(String title, String content) {//우클릭 Generate - Constructor(생성자) - 두개선택 해서 자동생성된 메소드
+//        this.title = title;
+//        this.content = content;
+//    }   //여기까지는 기본적으로 프론트단 form데이터 받아오려면 갖추어야할 형태이다.
+
+
+//    @AllArgsConstructor를 달았으므로 필요가없다. 롬복의 힘이다.
+//    @Override   //우클릭 Generate - toString() - 두개선택 해서 자동생성된 메소드. 역할: 로그보려는건가?
+//    public String toString() {
+//        return "ArticleForm{" +
+//                "title='" + title + '\'' +
+//                ", content='" + content + '\'' +
+//                '}';
+//    }
+
 
         //Article은 Entity클래스고 이 클래스에 객체를 생성해야하니까 아래 생성자를 호출해야한다. (다 private하시니까)
 //    public Article toEntity(Long id, String title, String content) {

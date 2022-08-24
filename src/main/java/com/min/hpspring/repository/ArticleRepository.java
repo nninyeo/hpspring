@@ -3,6 +3,8 @@ package com.min.hpspring.repository;
 import com.min.hpspring.entity.Article;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.ArrayList;
+
 //인터페이스를 한 이유: repo(셔틀)를 직접 구현할수도있지만 JPA에서 제공하는걸 써보기위함. extends CrudRepository 상속받기.
 //그럼 CRUD레파지토리 기능을 정의없이 그대로쓸수있음. findById() 같은걸 쓸수있다.
 //추가로 < > 넣고 여기 <T, ID> = <관리대상:Article엔티티, 관리대상 엔티티에서 대표값의 타입(여기선id)>
@@ -11,6 +13,11 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     //근데 그럼 그냥 CrudRepo를 그냥 그대로쓰면되는거아님? 응 아니야.
 
 
+
+    @Override //오버라이드 덮어쓰기해서 findAll()을 재정의해서쓸거다.
+//    Iterable<Article> findAll(); 덮어쓰기전 원래꺼
+    ArrayList<Article> findAll();   //덮어쓴후 Iterable > ArrayList
+    //<Article>은 이 꺽쇠Article 형식에만 이걸적용한단소리같음.
 
 //이번에 articleRepository.save(article)라고 save를 썻잖아.
 //아래 양키형들 주석이랑 분석해보면.
@@ -31,14 +38,6 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
      * 타입파라미터로 불특정 다수 받으려는데 제약을 좀 걸고싶다 하면 쓰는게
      * 경계가 있는 파라미터 타입이다. T를 받을수있고 number을 상속받은 하위타입만 받을수있다.
      *
-     *
-     * Saves all given entities.
-     *
-     * @param entities must not be {@literal null} nor must it contain {@literal null}.
-     * @return the saved entities; will never be {@literal null}. The returned {@literal Iterable} will have the same size
-     *         as the {@literal Iterable} passed as an argument.
-     * @throws IllegalArgumentException in case the given {@link Iterable entities} or one of its entities is
-     *           {@literal null}.
      */
 
 

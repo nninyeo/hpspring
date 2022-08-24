@@ -1,0 +1,28 @@
+{{>layouts/header}}
+
+
+<table class="table table-dark">
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th scope="col">#</th>-->
+<!--        <th scope="col">First</th>-->
+<!--        <th scope="col">Last</th>-->
+<!--        <th scope="col">Handle</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+    {{#article}}    <!-- #으로 해서 /로 끝나는 범위안에 데이터바인딩 -->
+    <tbody>
+    <tr>
+        <th scope="row">1</th>
+        <td>{{id}}</td>
+        <td><a href="/article/{{id}}"></a> <a>{{title}}</a></td>
+        <td>{{content}}</td>
+    </tr>
+    </tbody>
+    {{/article}}
+
+</table>
+
+<!--<button type="button" >목록으로</button>-->
+
+{{>layouts/footer}}
