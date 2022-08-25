@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -101,7 +102,9 @@ public class ArticleController {
            리스트 대신 어레이리스트 써도되는데 리스트가 상위니깐 그냥 상위로 ㅎ
         */
 
-        List<Article> articlesEntityList = (List<Article>)articleRepository.findAll();
+        //형변환한것은 ArticleRepositoy IF에서 findaAll()에 대한 오버라이드에서 캐스팅해서 문제없음.
+//        List<Article> articlesEntityList = (List<Article>)articleRepository.findAll();
+        List<Article> articlesEntityList = articleRepository.findAll();
 
 
         //2. 가져온 아티클 묶음을 뷰로 전달한다.
@@ -109,24 +112,79 @@ public class ArticleController {
         model.addAttribute("articleList", articlesEntityList);
 
         //3. 뷰 페이지를 설정한다
-
         return "articles/index";    // articles/index.mustache
     }
 
 
-    @GetMapping("/articles/{article.id}/edit")
-    public String edit(){
-        return "";
+    @GetMapping("/articles/{id}/edit")//{article.id}라는 .찍는 방법도 있나보다 나중에 변수많을때
+    public String edit(@PathVariable Long id, Model model){  //이 아이디를 url {id}에서 가져와야한다
+
+        //수정할 데이터를 가져오기
+        Article articleEntity = articleRepository.findById(id).orElse(null);
+
+        //가져온 데이터를 Model에 데이터 등록
+        model.addAttribute("article", articleEntity); //이름은 무난하게 article라했다. 바꾸고싶다진심
+
+        //뷰 페이지 설정!
+        return "articles/edit";
     }
 
 
+    @PostMapping("/article/update")    //글 수정하기. edit에서 수정버튼누르면 폼 데이터날아온다
+    public String update(ArticleForm form) {
+
+        //1. DTO를 엔티티로 변환하고 (폼셔틀이 dto)
+        Article articleEntity = form.toEntity(); //했던거.
+        log.info(articleEntity.toString());
 
 
+        //2. DB에 저장
+        //2-1. DB에서 기존 결과를 가져온다 (db셔틀 repo를쓰자)
+        //id를 받아올건데 getter를 호출해서 아이디값을 넣어줄거다. 가져온 id가없으니
+        //private ArticleRepository articleRepository;라고 맨위에 @Autowired해놔서 사용가능.
 
 
+        Article target = articleRepository.findById(articleEntity.getId()).orElse(null);
+        //findById 리턴은 기본적으로 (Optional<T> findById(ID id);)라고 옵셔널로한다.
+        //그 대상도 받아와야한다. 애를 타겠으라고 이름을 일단 지어놨다.
+        //optional<list>라는걸 잘 모르니 간단하게 만들자. 타겟에 데이터있으면 entity연결 없으면null
+
+        log.info(String.valueOf(target));
+
+        //2-2.DB데이터갱신
+        if (target != null) {
+            articleRepository.save(articleEntity);
+        }
+
+        //3. 수정결과 리다이렉트!
+        return "redirect:/article/" + articleEntity.getId();
+    }
 
 
+    @GetMapping("/articles/{id}/delete")
+    public String delete(@PathVariable Long id, RedirectAttributes rttr){   //Model model 안쓰고
 
+        //1. 삭제대상을 가져오고
+        //삭제대상 가올때는 JPA에서 제공하는 repo와 소통해야함.
+        Article target = articleRepository.findById(id).orElse(null);
+        //여기도 역시 타겟.
+
+
+        //2. 그 대상을 삭제하고
+        if (target != null){
+            articleRepository.delete(target);
+            rttr.addFlashAttribute("msg", "del done..");//("key", "value")
+        }   //msg를 header.must 에다가 보낼거다. this Flash is 휘발성. 여기 어떤 키값을 넣을수있다.
+        //url로 데이터를 리턴하는데 표시는안되는게 휘발성(Redirect후 값이 소멸)이라 그렇다. RedirectAttributes는 url이 그대로남는다.
+        //addFlashAttribute는  flash 속성에 객체를 저장가능
+        //RedirectAttributes는 request parameters로 전달. vo도 되고 msg도되고
+
+        //3. 완료되면 결과페이지로 리다이렉트
+        return "redirect:/articles";    //**이거 articles가 아니라 /articles URL의 index.mustache페이지다
+    }
+
+
+    //TODO: data.sql넣은후 추가시 에러남.
 
 
 }//end class

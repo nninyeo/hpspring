@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 //- Entity: 자바객체를 DB가 이해할 수 있게 잘 규격화된 데이터.
@@ -25,7 +22,8 @@ public class Article {
 
     //DB에서 관리하는 Table단위에 연결해주는 @Column작업
     @Id //고유id
-    @GeneratedValue //값자동생성
+    //@GeneratedValue //값자동생성. JAVA에서 컨트롤함.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//DB가 자동생성 컨트롤
     private Long id;
 
     @Column

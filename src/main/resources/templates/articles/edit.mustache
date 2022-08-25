@@ -1,0 +1,27 @@
+{{>layouts/header}}
+
+<h3>흠</h3>
+<form class="container" method="post" action="/article/update">  <!-- action: 어디로보낼지...-->
+
+    <!--  각 요소의 name에 id title content란 이름으로 넘어가야하니 맞춰놔야함. -->
+
+    <input name="id" type="hidden" value="{{id}}" />
+    <!--  id에 밸류 넣어두고 이걸 숨겨논채로 보낼거임.  -->
+
+    <label>
+        <input name="title" value="{{article.title}}">    <!-- 보낼데이터 1 : dto와 동일 -->
+    </label>
+    <label>
+        <textarea name="content">{{article.content}}</textarea> <!-- 보낼데이터 2 : dto와 동일  -->
+        <!-- value값은 다 알제-->
+    </label>
+    <button type="submit" style="padding: 20px">write</button>
+    <a href="/articles/{{article.id}}">Back</a>
+</form>
+
+<!--참고로 폼을 중괄중괄 #article /article 이렇게 감싸는거 안할거면 article. 라고 앞에 prefix붙여줘야함.-->
+{{>layouts/footer}}
+
+
+<!-- <a href="/articles/{   article.id}}">Back</a> -->
+

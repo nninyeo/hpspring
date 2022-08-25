@@ -8,6 +8,7 @@ import lombok.ToString;
 @ToString //롬복 - toString()
 public class ArticleForm {
 
+    private Long id;    //edit때매 추가된 id필드
     private String title;
     private String content;
 
@@ -43,6 +44,9 @@ public class ArticleForm {
 
         //아래는 Article클래스의 새 객체를 생성해달라고 파라미터 넣어주는거다.
        // 따라가보면 this.id 이런 생성자들이 있다. 그기에 @Column등록하고 끝이다.
-        return new Article(null, title, content);   //id는 널주고 content랑은 dto에 담긴걸 그대로줌. 이렇게 반환.
+        return new Article(id, title, content);
+
+        //최근에 null준거를 빼고 거기 id를 넣었다. 이제 엔티티에 id를 추가할수있게됬다.
+        //id는 널주고 content랑은 dto에 담긴걸 그대로줌. 이렇게 반환.
     }//즉,  dto에서는 ArticleForm()을 통해 받은 두 데이터를 가지고있다가 toEntity()가 데이터달라고 하면 그걸 넘겨준다.
 }
