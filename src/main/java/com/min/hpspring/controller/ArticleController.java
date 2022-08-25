@@ -57,7 +57,7 @@ public class ArticleController {
 //        System.out.println(saved.toString());//log
          log.info(saved.toString());
 
-        return "redirect:/articles/" + saved.getId(); //작성후갈곳 + 글번호 = 해당글
+        return "redirect:/article/" + saved.getId(); //작성후갈곳 + 글번호 = 해당글
     }
 
     @GetMapping("/article/{id}")    //{id}는 변하는수.
@@ -114,7 +114,10 @@ public class ArticleController {
     }
 
 
-
+    @GetMapping("/articles/{article.id}/edit")
+    public String edit(){
+        return "";
+    }
 
 
 
