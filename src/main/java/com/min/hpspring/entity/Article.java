@@ -32,6 +32,15 @@ public class Article {
     @Column
     private String content;
 
+    //내용에 null이 올까봐 무서워서 패치기능을 만든답니다
+    //근데 작동이 안되는디요???
+    public void patch(Article article) {
+        if (article.title != null)//널이면 업데이트안하고 널이아닌 값이있으면 업데이트하겠단소리.
+            this.title = article.title;
+        if (article.content != null)
+            this.content = article.content;
+    }
+
 
     //@Getter 없을때 필요한거.
 //    public Long getId() {

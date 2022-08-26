@@ -66,7 +66,7 @@ public class ArticleController {
         //@설명: id값을 컨트롤러한테 받아오겠다고함. 타입은 롱이고 변수하나만들고
         //model은 그냥 모델담는 그릇이다. 임포트항목임.
 
-        log.info("id = " + id); //매우 sysout처럼 쓰면됨.
+        //log.info("id = " + id); //매우 sysout처럼 쓰면됨.
 
 
         //1. id로 데이터(Article 1줄)를 가져옴. Article타입의 article엔티티로 아이디를 찾아서 repo셔틀통해 받아와저장. (id).orelse(null):아이디값을 통해 찾았는데 그게 없으면 널을 반환해라
@@ -135,7 +135,7 @@ public class ArticleController {
 
         //1. DTO를 엔티티로 변환하고 (폼셔틀이 dto)
         Article articleEntity = form.toEntity(); //했던거.
-        log.info(articleEntity.toString());
+        //log.info(articleEntity.toString());
 
 
         //2. DB에 저장
@@ -149,7 +149,7 @@ public class ArticleController {
         //그 대상도 받아와야한다. 애를 타겠으라고 이름을 일단 지어놨다.
         //optional<list>라는걸 잘 모르니 간단하게 만들자. 타겟에 데이터있으면 entity연결 없으면null
 
-        log.info(String.valueOf(target));
+        //log.info(String.valueOf(target));
 
         //2-2.DB데이터갱신
         if (target != null) {
