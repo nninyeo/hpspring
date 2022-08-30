@@ -34,12 +34,15 @@ public class ArticleController {
     //근데 캐스팅은 언제해줬데?? crudRepository를 쓰면 앞에 (Article)형변환하라고뜨는데.. 심지어 null오류도남.
     //언제해줬냐면 IF상속받을때 <Article, Long> 넣었단다.
 
+
+    /** 게시글 작성페이지로 이동 */
     @GetMapping("/articles/new")
     public String newArticleForm(){
         return "articles/new";
         //리턴에다가 뷰 페이지를 던져줌. articles폴더의 new.mustache를 찾아감. (.mustche는 생략)
     }
 
+    /** 게시글 작성 폼 전송.  */
     @PostMapping("/articles/create")
     public String newArticleForm(ArticleForm form){ //파라미터로 DTO인 아티클폼 형의 form데이터를담아 html로부터 받아왔다.
 
@@ -61,6 +64,7 @@ public class ArticleController {
         return "redirect:/article/" + saved.getId(); //작성후갈곳 + 글번호 = 해당글
     }
 
+    /** 게시글 단건 조회 */
     @GetMapping("/article/{id}")    //{id}는 변하는수.
     public String show(@PathVariable Long id, Model model){
         //@설명: id값을 컨트롤러한테 받아오겠다고함. 타입은 롱이고 변수하나만들고
@@ -82,11 +86,7 @@ public class ArticleController {
     }
 
 
-    /**
-     *  Entity는 셔틀용 가방. Repo는 셔틀. (셔틀의 방) 아니그럼 엔티티가 셔틀이고 Repo는 캐시아님?
-     *
-     *
-     */
+    /** 게시글 리스트 조회 */
     @GetMapping("/articles")
     public String index(Model model){
         //article 엔티티 list를 뷰로 전달할땐 모델을 써야하므로 모델을 para로 추가. 그릇같은건가?
@@ -116,6 +116,7 @@ public class ArticleController {
     }
 
 
+    /** 게시글 수정편집 페이지로 이동 */
     @GetMapping("/articles/{id}/edit")//{article.id}라는 .찍는 방법도 있나보다 나중에 변수많을때
     public String edit(@PathVariable Long id, Model model){  //이 아이디를 url {id}에서 가져와야한다
 
@@ -130,6 +131,7 @@ public class ArticleController {
     }
 
 
+    /** 게시글 수정내용 폼 전송 */
     @PostMapping("/article/update")    //글 수정하기. edit에서 수정버튼누르면 폼 데이터날아온다
     public String update(ArticleForm form) {
 
@@ -161,6 +163,7 @@ public class ArticleController {
     }
 
 
+    /** 게시글 삭제 */
     @GetMapping("/articles/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes rttr){   //Model model 안쓰고
 

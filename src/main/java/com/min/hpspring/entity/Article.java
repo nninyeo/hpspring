@@ -8,10 +8,10 @@ import lombok.ToString;
 import javax.persistence.*;
 
 
-//- Entity: 자바객체를 DB가 이해할 수 있게 잘 규격화된 데이터.
-// - Repository: 이 레파지토리라는 일꾼을 통해 잘 전달되고 처리된다. = 셔틀 Repo
+//- Entity: 자바객체를 DB가 이해할 수 있게 잘 규격화된 데이터. 미네랄
+// - Repository: 이 레파지토리라는 일꾼을 통해 잘 전달되고 처리된다. = 셔틀 Repo. scv 미네랄들고 움직임
 // 컨트롤러가 dto를 Entity로 변환해서 repo에 태워 DB로 보낸다.
-
+// 여기서 테이블도 생성하나봄.
 
 @Entity //DB가 해당 객체를 Entity객체라고 인식할 수 있게하는 @
 @AllArgsConstructor //롬복, 생성자 생성해줌
@@ -66,11 +66,12 @@ public class Article {
 
 
 
-
+//@NoArgsConstructor 와 중복. 노필요
     //?????기본생성자가 없으면 어째 오류가남.아래것들 깡그리 없애면? 그럼오류남
 //    //이게 파라미터가 아무도없는 디폴스생성자인데 가지고있어야하는걸 @NoArgsConstructor을 통해 없앤다.
 //    public Article() {
 //    }
+
 
     //이거 왜필요함? 하는게없음.
 //    public Article toEntity() {

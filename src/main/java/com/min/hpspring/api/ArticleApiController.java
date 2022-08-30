@@ -20,6 +20,7 @@ import java.util.List;
 @Slf4j
 @RestController //RestAPI용 컨트롤러! JSON 데이터 반환
 public class ArticleApiController {
+    //컨트롤러는 응답요청하고 리턴처리하는것만 집중
 
 //   old
 //    **이부분은 이제 서비스를 땡겨와서 쓸거라서 repo로 다이렉트가 아니라 중간업자인 서비스로 연결할거다.
@@ -30,47 +31,124 @@ public class ArticleApiController {
     private ArticleService articleService;
 
 
-
+    /** 전체 게시글 목록 조회  @GetMapping("api/articles") */
     @GetMapping("api/articles")
-    public List<Article> index() {      //자료형은 그대로 간다.
-        return articleService.index();  //리턴은 니가 저기가서 해와라 이건가
+    public List<Article> index() {      //자료형은 그대로.
+
+        return articleService.index();  //리턴은 서비스.index()가서 가져오라
     }
+
+
+    /** 게시글 단건 조회  @GetMapping("api/article/{id}") */
+    @GetMapping("api/article/{id}")
+    public Article index(@PathVariable Long id){
+        return articleService.show(id);
+        //잘보면 리턴타입이 Article이다. 그전엔 리턴을 스트링으로 페이지를줬는데 애는 데이터자체를 던져버린다.
+    }
+
+
+
+    /** 게시글 작성: id빼고 사용바람  {"title": "asdf", "content": "vvv"} */
+    @PostMapping("/api/articles")
+    public ResponseEntity<Article> create(@RequestBody ArticleForm dto){
+        //반환형이 ResponseEntity<Article>인 이유는 반응결과랑 데이터 쏴줘야하니깐.
+        //form대신 dto넣음. 그리고 그전엔 파라미터만받음되서 @PathVar 썻는데 json에선 그대로안받아지니 @ReqBody써야함.
+        //클라이언트가 전송한 article을 받아와야하는데 이 형식이 없으니 articleForm form하면되는데
+        //Article article = form.toEntity();
+        //이번엔 이거를 dto라고 선언해주자. Form도 이름좀 바꾸고싶지만 일단그냥씀.
+
+        Article created = articleService.create(dto);
+
+        //ok시 잘 만들어진 데이터 created를 바디에 얹어보냄.
+        return (created != null) ?
+                ResponseEntity.status(HttpStatus.OK).body(created): //good
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();//bad
+    }
+
+
+
+    /** 게시물 수정. url{id} 및 id가 잘 매치되야함. 실무에서 PATCH사용금지! 불안정. */
+//    {"id": 1, "title": "수정할타이틀", "content": "수정할컨텐츠"}
+//      만약 이렇게던지면 빈곳엔 리턴 null db도 null 들어감
+//    {"id": 2, "title": "컨텐츠빼고수정할타이틀만보낸다"}
+    @PatchMapping("/api/articles/{id}")
+    public ResponseEntity<Article> update(@PathVariable Long id,    //url id 따오기
+                          @RequestBody ArticleForm dto) { //body로 받은 입력데이터
+        //ResponseEntity<T>반환형: 이거 자바껀데 extends HttpEntity<T>를 해논거라 저렇게 사용해야한다.
+        //Article로만 리턴하면 http정보가 리턴이안됨.
+        //<Article>은 바디다. Type parameters: <T> – the body type 라고 써있네.
+
+
+        Article updated = articleService.update(id, dto);
+
+
+        //* ResponseEntity.status는 Controller의 역할임. 그 구분기준이 뭐지?
+
+        //return update //api 리턴에다가 200번(updated만) 그냥보내도되지만
+        //그래도 OK로 해서 body에다가 싣어보내보자.
+        return (updated != null) ?
+                ResponseEntity.status(HttpStatus.OK).body(updated):
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();//*원래는 예외처리해야함.
+    }
+
+
+
+    /** 게시글 삭제  @DeleteMapping("/api/articles/{id}")  */
+    @DeleteMapping("/api/articles/{id}")
+    public ResponseEntity<Article> delete(@PathVariable Long id){   //사용자입력body 필요없음
+
+        Article deleted = articleService.delete(id);
+
+        return (deleted != null) ?
+        ResponseEntity.status(HttpStatus.OK).build():
+        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        //body(null) 줘도되고 build();줘도되고... http코드는 null보단 200이 낫고 그보다 OK가낫다
+    }
+
+    /** 트랜잭션 테스트 : POST로 여러글 동시생성 */
+    //데이터형식: [{"title": "data", "content": "data"}{...}{...}...{...}]
+    @PostMapping("/api/transaction-test")
+    public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleForm> dtos){
+        //ResponseEntity에 Article을 던지는데 List로 묶어서 던질거다.
+        //그 메소드 이름은 transactionTest라고 해줍시다.
+        //이제 던져진 여러 데이터를 받아와야하니깐 (@RequestBody)를 통해 받아오는데
+        //리스트로 묶은 ArticleForm을 받자. 변수명을 dtos 복수형으로 만들어봤다.
+
+        //여긴 컨트롤러니깐 여기서 데이터받고 뭘 응답해줄지만 정하면됨. 자세한 순서와 내용은 서비스에서.
+
+        List<Article> createdList = articleService.createArticles(dtos);
+        //Service.createArticles()에 데이터 만들라고 dtos 던짐
+        //잘 만들어지면  Article엔티티의 묶음형식으로 createdList에 넣어둔다.
+        //별로면 bad주고 빌드해서 보내줌.
+        return (createdList != null) ?
+                ResponseEntity.status(HttpStatus.OK).body(createdList) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+    }
+
+
+}//ArticleApiController.java
+//==========================================================================================
 
 
 //old
 //    @GetMapping("api/articles")
 //    public List<Article> index() {
 //        return articleRepository.findAll();
-//
 //    }
 
-    @GetMapping("api/article/{id}")
-    public List<Article> index(@PathVariable Long id){ //오잉 index()겹치는데 파라미터 리턴 다르다고 되는건가..이런..
-        return articleService.index();
-        //잘보면 리턴타입이 Article이다. 그전엔 리턴을 스트링으로 페이지를줬는데 애는 데이터자체를 던져버린다.
-    }
-
-    //*patch delete는 잘 안씀. 신동혜말로는.. get post put을 주로씀. put은 누가봐도 업데이트니깐
 
 
 //OLD
 //    @GetMapping("api/article/{id}")
 //    public Article index(@PathVariable Long id){ //오잉 index()겹치는데 파라미터 리턴 다르다고 되는건가..이런..
 //        return articleRepository.findById(id).orElse(null);
-//        //잘보면 리턴타입이 Article이다. 그전엔 리턴을 스트링으로 페이지를줬는데 애는 데이터자체를 던져버린다.
 //    }
-//
 //    //*patch delete는 잘 안씀. 신동혜말로는.. get post put을 주로씀. put은 누가봐도 업데이트니깐
 
 
 
-//
-//    //Create임.
-////이렇게 던지시오. id빼고
-////    {
-////        "title": "asdf",
-////        "content": "vvv"
-////    }
+//old
 //    @PostMapping("/api/articles")
 //    public Article create(@RequestBody ArticleForm dto){
 //        //form대신 dto넣음. 그리고 그전엔 파라미터만받음되서 @PathVar 썻는데 json에선 그대로안받아지니 @ReqBody써야함.
@@ -80,10 +158,13 @@ public class ArticleApiController {
 //        //이번엔 이거를 dto라고 선언해주자. Form도 이름좀 바꾸고싶지만 일단그냥씀.
 //        Article article = dto.toEntity();
 //
-//        return articleRepository.save(article);// save(article)을 DB로 저장해주면 되는거지.
+//        return articleService.save(article);// save(article)을 DB로 저장해주면 되는거지.
 //    }
-//
-//
+
+
+
+
+//old
 //    //Patch임.
 ////이렇게 던지시오. 요청url의 {id}도 잘 매치되야함.
 ////    {
@@ -142,43 +223,13 @@ public class ArticleApiController {
 //        return ResponseEntity.status(HttpStatus.OK).body(updated);
 //
 //    }
-//
-//    @DeleteMapping("/api/articles/{id}")
-//    public ResponseEntity<Article> delete(@PathVariable Long id){   //사용자입력body 필요없음
-//            //위에 왜 ResponseEntity<Article>로 리턴하지? 딴건없나... Httpstatus때매그른가
-//        Article target = articleRepository.findById(id).orElse(null);
-//
-//        if (target == null) {
-//            //400 잘못된 응답요청
-//            log.info("없는게시물");
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//            // 400보단 BAD_REQUEST주는게 낫다
-//            // return type이 Article이므로
-//        }
-//
-//
-//        //articleRepository.deleteById(id);이거일줄알았지만
-//        articleRepository.delete(target);//이거였다니.. 둘다해보기.
-//        return ResponseEntity.status(HttpStatus.OK).build();
-//        //body(null) 줘도되고 build();줘도되고... http코드는 null보단 200이 낫고 그보다 OK가낫다
-//    }
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
-}
+
+
+
+
+
+
+

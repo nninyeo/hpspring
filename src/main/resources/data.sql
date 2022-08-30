@@ -1,16 +1,28 @@
--- INSERT INTO article (id, title, content) VALUES (21, `shf`, `w45h`);
--- INSERT INTO article (id, title, content) VALUES (22, `sfg`, `hr`);
--- INSERT INTO article (id, title, content) VALUES (23, `sfg`, `snf`);
--- INSERT INTO article (id, title, content) VALUES (24, `hfg`, `k55kdh`);
--- INSERT INTO article (id, title, content) VALUES (25, `s5rkl4`, `sc45hj4sf`);
+-- 15강: article 더미 데이터
+INSERT INTO article(id, title, content) VALUES(1, '가가가가', '1111');
+INSERT INTO article(id, title, content) VALUES(2, '나나나나', '2222');
+INSERT INTO article(id, title, content) VALUES(3, '다다다다', '3333');
+-- 22강: article 더미 데이터
+INSERT INTO article(id, title, content) VALUES(4, '당신의 인생 영화는?', '댓글 ㄱ');
+INSERT INTO article(id, title, content) VALUES(5, '당신의 소울 푸드는?', '댓글 ㄱㄱ');
+INSERT INTO article(id, title, content) VALUES(6, '당신의 취미는?', '댓글 ㄱㄱㄱ');
+-- 22강: comment 더미 데이터
+---- 4번 게시글의 댓글들
+INSERT INTO comment(id, article_id, nickname, body) VALUES(1, 4, 'Park', '굳 윌 헌팅');
+INSERT INTO comment(id, article_id, nickname, body) VALUES(2, 4, 'Kim', '아이 엠 샘');
+INSERT INTO comment(id, article_id, nickname, body) VALUES(3, 4, 'Choi', '쇼생크의 탈출');
+---- 5번 게시글의 댓글들
+INSERT INTO comment(id, article_id, nickname, body) VALUES(4, 5, 'Park', '치킨');
+INSERT INTO comment(id, article_id, nickname, body) VALUES(5, 5, 'Kim', '샤브샤브');
+INSERT INTO comment(id, article_id, nickname, body) VALUES(6, 5, 'Choi', '초밥');
+---- 6번 게시글의 댓글들
+INSERT INTO comment(id, article_id, nickname, body) VALUES(7, 6, 'Park', '조깅');
+INSERT INTO comment(id, article_id, nickname, body) VALUES(8, 6, 'Kim', '유튜브');
+INSERT INTO comment(id, article_id, nickname, body) VALUES(9, 6, 'Choi', '독서');
 
 
-INSERT INTO article(id, title, content) VALUES(1, 'dfkvm', 'a5eyqasgarga r a aargarahaerrgaer');
-INSERT INTO article(id, title, content) VALUES(2, 'ndfgns', 'a rga5arewrg aerga');
-INSERT INTO article(id, title, content) VALUES(3, 'q5aer', 'ae5r5ga rsbe5asr  bdf4eb w');
-INSERT INTO article(id, title, content) VALUES(4, 'artra', 'ab erbs5 aerbaer');
-INSERT INTO article(id, title, content) VALUES(5, 'nwrts', 'a erq45wea eeras');
--- INSERT INTO article (id, title, content) VALUES (12, nbwsfgm, ktdf);
--- INSERT INTO article (id, title, content) VALUES (13, ntsvm, birfid);
--- INSERT INTO article (id, title, content) VALUES (14, bwsts, k55kdh);
--- INSERT INTO article (id, title, content) VALUES (15, s5rkl4, sc45hj4sf);
+--스프링부트 2.5부터 data.sql설정법이 2개인데
+--1)application.yml(or properties)에 spring.jpa.defer-datasource-initialization=true
+--2)schema.sql을 추가해서 hibernate가 스키마 생성과정보다 먼저 실행되게해서 해당 스키마에 data.sql을 채우기
+--2번은 권장안함.
+
