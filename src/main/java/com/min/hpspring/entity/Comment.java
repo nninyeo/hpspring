@@ -1,5 +1,6 @@
 package com.min.hpspring.entity;
 
+import com.min.hpspring.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,55 @@ public class Comment {
 
     @Column
     private String body;
+
+
+    /** CommentDto -> Entity */
+    public static Comment createComment(CommentDto dto, Article article) {
+
+        //예외처리 - 잘못된 dto의 id null여부 확인
+        if(dto.getId() != null) //서버문제로 댓글중복갈겨질수있어서 그런것인가?
+            throw new IllegalArgumentException("뎃글의 id가 없어야한다");     //이해못했다..이런상황..
+        if(dto.getArticleId() != article.getId()) //(url이랑 json이랑 다르면)
+            throw new IllegalArgumentException("게시글의 id가 없어야한다");
+
+        //정상이면 엔티티생성및반환
+        return new Comment(
+                dto.getId(),
+                article,    //애는 그냥 이미 article형으로 받아온거라 그대로간다. 어자피 위에보면 그렇게선언됨
+                dto.getBody(),
+                dto.getNickname()
+        );
+
+
+    }
+
+
+    public void patch(CommentDto dto){  //여기가 Entity공간이니깐 Dto로 가져와서 여기서 변환하는게 맞다.
+
+        //예외발생 - 아까처럼 json url다른경우에대한 처리
+        if(this.id != dto.getId()){
+            throw new IllegalArgumentException("댓글수정실패! 잘못된 id입력");
+        }
+
+
+
+
+
+        //예외없으면 객체를갱신
+        //들어온값이 널이면  업데이트안하고 널이아닌 값이있으면 업데이트하겠단소리.
+        if (dto.getNickname() != null) //입력된dto에 뭔가가 있을경우
+            this.nickname = dto.getNickname(); //업데이트
+        if (dto.getBody() != null) //입력된dto에 뭔가가 있을경우
+            this.body = dto.getBody();         //업데이트
+    }
+
+
+
+//함마드릴팩
+
+
+
+
 
 
 

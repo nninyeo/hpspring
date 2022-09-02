@@ -1,6 +1,7 @@
 package com.min.hpspring.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.min.hpspring.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,11 +19,16 @@ public class CommentDto {
 
     //아래4개도 여기필요한것들이니 필수
     private Long id;
-    private Long articleId;
+
+    @JsonProperty("article_id")//언더바 카멜로 자동매핑.. 대신 카멜이안됨. @.@
+    private Long articleId;//근데 이게작동을안함..
+
     private String nickname;
+
     private String body;
 
-    //이 메서드는 static이 붙어있으니 클래스메소드다. 애 역할은 comment형 코멘트들을 dto형으로 바까주는역할.
+    /** Comment Entity -> CommentDto Converter */
+    //이 메서드는 static이 붙어있으니 클래스메소드다.
     //인풋이 Comment형이고 아웃풋이 CommentDto형인걸 볼수있다.
     public static CommentDto createCommentDto(Comment comment) {
 
@@ -35,5 +41,14 @@ public class CommentDto {
                 comment.getBody()
         );
     }
+//
+//    /**CommentDto Converter ->  Comment Entity */
+//    //?
+//    public static Comment toEntity(){
+//
+//        return new Comment(thisid, articleId, )
+//    }
+//
+
 
 }

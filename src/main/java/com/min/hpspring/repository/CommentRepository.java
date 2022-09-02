@@ -38,9 +38,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 //            <query>   <![CDATA[  SELECT * FROM comment WHERE nickname = :nickname  ]]>    </query>
 //        </named-native-query>
 
-
-    //유니카 4미리로 5미리. 3미리가 염병임. 4미리 너무비싼데.. 1.5배가격.
-    //4미리로 만든건 이유가있을거같긴함. 근데 잡아주는 장력이 1.5배
-    //애꾸같이달았을때 안정성면에서 낫다는거지. 아아 어렵군..  일단 4로 가보고 힘들수도있으니깐. 그담에 5로 가는걸로!
-
 }
