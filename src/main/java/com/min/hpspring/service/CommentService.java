@@ -69,6 +69,7 @@ public class CommentService {
     /**
      * 댓글 목록 조회: GET - api/articles/{article_id}/comments
      *  신버전!!!!!
+     *  리턴값: List<CommentDto>
      */
     //코멘트리파지토리에서 id로 찾아오고 파라미터로 아이디 넣어주면 코멘트 묶음을 반환해줄거다.
     public List<CommentDto> comments(Long articleId) {
