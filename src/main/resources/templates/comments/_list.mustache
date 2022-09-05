@@ -4,15 +4,22 @@
         <div class="card text-white bg-dark card m-2" id="comments-{{id}}"><!-- Dtos안에 코멘트DTO값이 삽입이 됨. -->
             <div class="card-header">
                 {{nickname}}
-                <!-- 모달 트리거 버튼 -->
+                <!--
+                모달 트리거 버튼
+                -bs-넣으면 고장남.
+                 data-target="#클릭시여줄대상id"
+                 data-id / nick / body / article-id "{}" : {commentDtos}에서 가져옴.
+                 -->
                 <button type="button"
-                        class="btn btn-sm btn-outline-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#comment-edit-modal"
-                        data-bs-id="{{id}}"
-                        data-bs-nickname="{{nickname}}"
-                        data-bs-body="{{body}}"
-                        data-bs-article-id="{{articleId}}">수정</button>
+                        class="btn btn-sm btn-outline btn-primary"
+                        data-toggle="modal"
+                        data-target="#comment-edit-modal"
+                        data-id="{{id}}"
+                        data-nickname="{{nickname}}"
+                        data-body="{{body}}"
+                        data-article-id="{{articleId}}"
+                >수정
+                </button>
                 <!-- 이 data-bs-oxoxox 속성: 부트스트랩 속성임. -->
             </div>
             <div class="card-body">
@@ -22,6 +29,7 @@
     {{/commentDtos}}
 </div>
 
+-->
 
 <!-- Modal -->
 <div class="modal fade" id="comment-edit-modal" tabindex="-1">
@@ -56,12 +64,19 @@
 </div>
 
 
+
+
 <!-- 모달 이벤트 처리 -->
+
+
+
 <Script>
+    //12:00보는중.
+
     {
-        // 모달 요소 선택
+        // 모달 요소 선택 - 모달창 전체외부껍데기 id 가져오기
         const commentEditModal = document.querySelector("#comment-edit-modal");
-        // 모달 이벤트 감지
+        // 모달 이벤트 감지 - show.bs.modal이란 이벤트 발생시 펑션작동.
         commentEditModal.addEventListener("show.bs.modal", function(event) {
             // 트리거 버튼 선택
             const triggerBtn = event.relatedTarget;
