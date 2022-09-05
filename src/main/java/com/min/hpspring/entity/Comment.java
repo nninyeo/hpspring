@@ -50,8 +50,6 @@ public class Comment {
                 dto.getBody(),
                 dto.getNickname()
         );
-
-
     }
 
 
@@ -63,9 +61,6 @@ public class Comment {
         }
 
 
-
-
-
         //예외없으면 객체를갱신
         //들어온값이 널이면  업데이트안하고 널이아닌 값이있으면 업데이트하겠단소리.
         if (dto.getNickname() != null) //입력된dto에 뭔가가 있을경우
@@ -73,15 +68,5 @@ public class Comment {
         if (dto.getBody() != null) //입력된dto에 뭔가가 있을경우
             this.body = dto.getBody();         //업데이트
     }
-
-
-
-//함마드릴팩
-
-
-
-
-
-
 
 }

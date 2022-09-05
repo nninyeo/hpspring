@@ -1,8 +1,11 @@
 package com.min.hpspring.controller;
 
+import com.min.hpspring.api.CommentApiController;
 import com.min.hpspring.dto.ArticleForm;
+import com.min.hpspring.dto.CommentDto;
 import com.min.hpspring.entity.Article;
 import com.min.hpspring.repository.ArticleRepository;
+import com.min.hpspring.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,9 @@ public class ArticleController {
 //로직과 저장을 위한 데이터는 entity: 식자재 : 실제 데이터는 entity로 관리
     @Autowired  //오토와이어드에 대해 설명해줄수있는가? intellij는 오토와이어드 사용자제하라함.
     private ArticleRepository articleRepository;
+
+    @Autowired  //리스트에서 댓글뿌려주려고 땡겨옴.
+    CommentService commentService;
 
 //    private CrudRepository crudRepository;  //test, 작동불가
 
@@ -80,6 +86,13 @@ public class ArticleController {
         //2. 가져온 데이터를 모델에 등록
         //모델.등록("바인딩명",바인딩해줄데이터그릇); "article"은 {{#article}}{{/}}에 바인딩.
         model.addAttribute("article", articleEntity);
+
+        //2-1. 댓글: 목록보내주기 - #commentDtos 서비스한테 댓글리스트 받아오기.
+
+        List<CommentDto> commentDtos = commentService.comments(id);
+        model.addAttribute("commentDtos",commentDtos);
+            //"commentDtos"는 코멘트 리스트쪽 div {{#commentDtos}} 에서 쓸 이름
+
 
         //3. 보여줄 페이지를 설정
         return "articles/show"; //articles/show.mustache

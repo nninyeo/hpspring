@@ -3,6 +3,7 @@ package com.min.hpspring.api;
 import com.min.hpspring.dto.CommentDto;
 import com.min.hpspring.entity.Comment;
 import com.min.hpspring.service.CommentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.CompletionService;
 
+@Slf4j
 @RestController
 public class CommentApiController {
 
@@ -43,7 +45,7 @@ public class CommentApiController {
         {
           "nickname": "ex",
           "body": "ex",
-          "article_id": "1"
+          "article_id": "1"   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
               id: 댓글의 id는 보내지않는다.
               ((카멜케이스는 @JsonProperty("article_id")해서 작동안될거임.))
          }*/
@@ -52,6 +54,9 @@ public class CommentApiController {
     @PostMapping("api/articles/{articleId}/comments")
     public ResponseEntity<CommentDto> create(@PathVariable Long articleId,
                                              @RequestBody CommentDto dto) {
+
+        log.info("dto>>>>>>>>>>>>>>>>>>" + dto.toString());
+
 
         //폼데이터 가져와야함.
 

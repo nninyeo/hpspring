@@ -1,3 +1,82 @@
-<div>
+<div id="comments-list"><!-- 부트스트랩 권장 구조 -->
+    <form>
+        <!-- 닉네임입력 -->
+        <div class="mb-3">
+            <label class="form-label">닉네임</label>
+            <input class="form-control form-control-sm" id="new-comment-nickname">
+        </div>
+        <!-- 댓글 본문 입력 -->
+        <div class="mb-3">
+            <label class="form-label">댓글내용</label>
+            <textarea class="form-control form-control-sm" rows="3" id="new-comment-body"></textarea>
+        </div>
 
+        <!-- 히든인풋 -->
+        {{#article}}
+            <input type="hidden" id="new-comment-article-id" value="{{id}}">
+        {{/article}}
+
+        <!-- 작성버튼 -->
+        <button type="button" class="btn btn-outline-primary btn-sm" id="comment-create-btn">작성하기</button>
+
+    </form>
 </div>
+
+<script>
+    {
+        const commentCreateBtn = document.querySelector("#comment-create-btn");
+        commentCreateBtn.addEventListener("click",function (){  //onclick이 아닌가보다.
+            //폼 내용 객체화, 키 값 리스트 Map형태?  이게 json화 될 예정이다.
+            const comment = {
+                nickname: document.querySelector("#new-comment-nickname").value,
+                body: document.querySelector("#new-comment-body").value,
+                article_id: document.querySelector("#new-comment-article-id").value
+            };
+            console.log(comment);
+
+
+            //Fetch API
+            // 파라미터: URL과 {어떻게보낼지}
+            // 리턴: .then alert 후 새로고침
+            const url = "/api/articles/" + comment.article_id + "/comments";//ex: /api/articles/4/comments
+            console.log(url);
+             //전에 카멜케이스 삽질때문에 일단 강제로 바꿈. 근데 api에서 카멜케이스 많이 씀.
+            fetch(url,{
+                method: "post",
+                body: JSON.stringify(comment),    //js객체->json
+                headers: {  //header 랑 headers 다름. 주의요망
+                    "Content-Type": "application/json"
+                }
+            }).then(response => {
+                    //http응답에따라 메세지 출력 후 새로고침
+                    const msg = (response.ok) ? "댓글등록됨" : "등록실패";
+                    console.log(msg);
+
+                    // alert(msg);
+                    // window.location.reload();
+                }
+            );//~fetch
+
+
+        });//~addEventListener
+    }
+</script>
+
+<!-- 전체구조순서
+
+ div > form > input, textarea, {#}, hidden, {/}, btn   < <..
+ 즉 폼 안에 다있어야하고 나머진 수평관계, 히든인풋의 value로 id지정, id는 해당 게시물의 번호임.
+ 이걸 굳이서버에서불러옴.
+ 폼에서 전송되는 데이터는 그럼
+ 1. input의 닉네임: "new-comment-nickname"
+ 2. textarea의 내용: "new-comment-body"
+ 3. 히든인풋의 id: value="{id}"
+ 이걸 id="comment-create-btn"버튼으로 전송하는게 아니라 이벤트걸어서 땡겨감
+
+ 4. 버튼에 클릭이벤트 걸고
+ 5. 그안에서 내용물들 변수에 짱박아서 (쿼리셀렉터).value 해줘야 값 찍어옴. 로그찍고 확인후 다음진행.
+ 6. js fatch
+
+
+
+ -->
