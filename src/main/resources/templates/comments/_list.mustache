@@ -29,7 +29,7 @@
     {{/commentDtos}}
 </div>
 
--->
+
 
 <!-- Modal -->
 <div class="modal fade" id="comment-edit-modal" tabindex="-1">
@@ -37,7 +37,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">댓글 수정</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- 댓글 수정 폼-->
@@ -53,8 +53,8 @@
                         <textarea type="text" class="form-control form-control-sm" rows="3" id="edit-comment-body"></textarea>
                     </div>
                     <!-- 히든 인풋 -->
-                    <input type="hidden" id="edit-comment-id">
-                    <input type="hidden" id="edit-comment-article-id">
+                    <input type="hidden" id="edit-comment-id">      <!--이쪽에 데이터가 들어가야만 함 -->
+                    <input type="hidden" id="edit-comment-article-id" >
                     <!-- 전송 버튼 -->
                     <button type="button" class="btn btn-outline-primary btn-sm" id="comment-update-btn">수정 완료</button>
                 </form>
@@ -77,14 +77,17 @@
         // 모달 요소 선택 - 모달창 전체외부껍데기 id 가져오기
         const commentEditModal = document.querySelector("#comment-edit-modal");
         // 모달 이벤트 감지 - show.bs.modal이란 이벤트 발생시 펑션작동.
+        console.log("A2");
         commentEditModal.addEventListener("show.bs.modal", function(event) {
             // 트리거 버튼 선택
+            console.log("A3");
             const triggerBtn = event.relatedTarget;
+            console.log("A1");
             // 데이터 가져오기
-            const id = triggerBtn.getAttribute("data-bs-id");
-            const nickname = triggerBtn.getAttribute("data-bs-nickname");
-            const body = triggerBtn.getAttribute("data-bs-body");
-            const articleId = triggerBtn.getAttribute("data-bs-article-id");
+            const id = triggerBtn.getAttribute("data-id");
+            const nickname = triggerBtn.getAttribute("data-nickname");
+            const body = triggerBtn.getAttribute("data-body");
+            const articleId = triggerBtn.getAttribute("data-article-id");
             //console.log(`${id}, ${nickname}, ${body}, ${articleId}`);
             // 데이터를 반영
             document.querySelector("#edit-comment-nickname").value = nickname;
@@ -118,9 +121,10 @@
             }).then(response => {
                 // http 응답 코드에 따른 메시지 출력
                 const msg = (response.ok) ? "댓글이 수정 되었습니다." : "댓글 수정 실패..!";
-                alert(msg);
+                console.log(msg);
+                //alert(msg);
                 // 현재 페이지를 새로고침
-                window.location.reload();
+                //window.location.reload();
             });
         });
     }
